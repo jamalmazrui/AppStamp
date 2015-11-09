@@ -1,0 +1,104 @@
+AppStamp
+Version 1.1
+November 9, 2015
+Copyright 2009 - 2015 by Jamal Mazrui
+GNU Lesser General Public License (LGPL)
+
+Contents
+
+Description
+Installation
+The Stamp Utility
+The Elevate Utility
+Development Notes
+----------
+
+Description
+
+AppStamp is a free, open source system that enables a program to update itself from a web site.  It includes a pair of utilities: Stamp.exe for a developer to record the time stamp of a program before uploading it to a web site, and Elevate.exe for a user to check whether a newer version of the program is available, and if so, download and install it.  AppStamp works on any version of Windows.
+
+----------
+
+Installation
+
+The installer for AppStamp is called AppStamp_setup.exe.  The default location for the program is
+C:\AppStamp
+
+Although a different location may be chosen, this one tendds to be more practical for developers using the command line than, say,
+C:\Program Files (x86)\AppStamp
+
+Only a developer needs to install the full AppStamp package.  A user may have a component installed, Elevate.exe, as part of a program distribution.
+  
+The AppStamp installer also creates a desktop shortcut and a program group within the Windows Start Menu, with options to launch each utility, read documentation, or uninstall.
+
+----------
+
+The Stamp Utility
+
+Stamp.exe records the time stamp of a program in the file AppStamp.ini, located by default at
+C:\AppStamp\AppStamp.ini
+
+This ini file has a section called Versions, containing an entry for each program being tracked.  For example, here is an entry for the PDF2TXT program:
+
+[Versions]
+PDF2TXT=3.4|2012-02-09 11:54
+
+This means that the latest version of PDF2TXT is numbered 3.4 with a time stamp of February 2, 2009 at 11:54. Note that the version number and time stamp are seperated by a vertical bar character (|), and that a 24-hour clock is used (18:30 is 6:30 PM).  The time format allows time stamps to be compared as strings.  
+
+Stamp.exe needs four parameters to create the AppStamp.ini entry: (1) the name of the program, (2) the path of one of its files on disk, (3) the path of AppStamp.ini, and (4) the version of the program.  These parameters Are passed on the command line, or the utility prompts for them if none are passed.  A parameter containing a space, e.g., as part of a folder path, should be enclosed in quotes.  Alternatively, the parameters may be included in an ini file that is passed as a single parameter to Stamp.exe.  For example, such an ini file might look as follows:
+
+[Stamp]
+AppName=PDF2TXT
+AppPath=C:\PDF2TXT\PDF2TXT.exe
+AppStampIniPath=c:\AppStamp\AppStamp.ini
+AppVersion=3.4
+
+The stamp utility examines the file in the AppPath parameter, using its date and time in the entry it puts in AppStamp.ini.  The AppPath parameter may refer to any file distributed with a program.  It does not have to be an executable file, but should be a file that is updated whenever a new version of the program is prepared for distribution, e.g., a documentation file that is saved with revised information.
+
+When a developer uploads a new version of the program to a web site, the new AppStamp.ini file should also be uploaded there.  The Elevate utility on the client computer will compare its own time stamp to the one in the AppStamp.ini file on the web site.  It will thus deduce  whether a newer, current, or older version of the program is available from the web site.
+----------
+
+The Elevate Utility
+
+Elevate.exe is distributed with the program downloaded from the web site.  It needs five parameters:  (1) the name of the program, (2) the path of one of its files on disk, (3) the URL of AppStamp.ini on the web site, (4) the URL of the program's setup file on the web site, and (5) the name of the setup file.  These parameters may be passed either on the command line or in an ini file passed as a single parameter to Elevate.exe.  For example, such an ini file might look like the following:
+
+[Elevate]
+AppName=PDF2TXT
+AppPath=C:\PDF2TXT\PDF2TXT.exe
+AppStampIniURL=http://EmpowermentZone.com/AppStamp.ini
+AppStamp_setup.exeURL=http://EmpowermentZone.com/p2tsetup.exe
+AppStamp_setup.exe=p2tsetup.exe
+
+Although the URL of the setup program typically ends in its file name, that does not have to be the case -- thus, a seperate parameter for the file name.
+
+A program can either run Elevate.exe automatically, e.g., at startup, or in response to a request by the user.  Such a request could be a menu item in the program, a hotkey, or a shortcut in a program group within the Windows Start Menu.  The Elevate utility compares a local time stamp to one on the server, and prompts whether to download and install the server version of the program by means of its executable file there.  If the server version is found to be newer, the default choice is Yes.  Otherwise, it is No.
+
+If the user chooses Yes, the setup file is downloaded to the Windows special folder for temporary files.  A message box then asks the user to close the program so that files may be replaced during the installation process.  After the user closes the program and presses the OK button in the message box, the setup file is executed, thereby installing a new version of the program.
+
+A side effect of this process is that the setup file is left in the Temp folder.  The next time the Elevate process occurs, that file will be replaced by a newer version.  If the developer would prefer not to leave such a file, the program can delete it from the Temp folder if found upon startup.
+
+You can try an Elevate example by choosing the Elevate AppStamp shortcut, located within the AppStamp program group of the Windows Start Menu.
+
+----------
+
+Development Notes
+
+For the technically interested, I developed AppStamp with the PowerBASIC compiler from
+http://PowerBASIC.com
+
+This compiler creates small executables, which do not add significant size to a distribution package of a program.  By default, source code is in the folder
+C:\AppStamp\source
+
+The installer for AppStamp is developed with Inno Setup from
+http://InnoSetup.org
+
+The latest version of the installer is available at
+http://EmpowermentZone.com/AppStamp_setup.exe
+
+I welcome feedback, which helps AppStamp improve over time.  When reporting a problem, the more specifics the better, including steps to reproduce the problem, if possible.
+
+Jamal Mazrui
+jamal@EmpowermentZone.com
+
+----------
+End of Document
